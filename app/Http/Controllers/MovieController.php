@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreMovieRequest;
 
 class MovieController extends Controller
@@ -13,7 +14,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $movies = Movie::latest()->paginate(15);;
+        $movies = Movie::latest()->paginate(15);
 
         return view('movies.index', compact('movies'));
     }

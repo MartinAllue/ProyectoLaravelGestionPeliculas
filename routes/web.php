@@ -6,12 +6,10 @@ use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
-// Redirige la raíz al listado de películas
 Route::get('/', function () {
     return redirect()->route('movies.index');
 });
 
-// Dashboard protegido por auth y verified
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -23,22 +21,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/movies', [MovieController::class, 'index'])->name('movies.index');
+Route::get('/movies/{movie}', [MovieController::class, 'show'])->name('movies.show');
+
 Route::middleware('auth')->group(function () {
+    Route::get('/movies/create', [MovieController::class, 'create'])->name('movies.create');
+    Route::post('/movies', [MovieController::class, 'store'])->name('movies.store');
+    Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])->name('movies.edit');
+    Route::put('/movies/{movie}', [MovieController::class, 'update'])->name('movies.update');
+    Route::delete('/movies/{movie}', [MovieController::class, 'destroy'])->name('movies.destroy');
 
-    // CRUD completo de películas
-    Route::resource('movies', MovieController::class);
+    Route::post('/movies/{movie}/rating', [RatingController::class, 'store'])->name('movies.rating.store');
 
-    // Valoraciones
-    Route::post('/movies/{movie}/rating', [RatingController::class, 'store'])
-        ->name('movies.rating.store');
-
-    // Comentarios / Reviews
-    Route::post('/movies/{movie}/reviews', [ReviewController::class, 'store'])
-        ->name('reviews.store');
-    Route::put('/reviews/{review}', [ReviewController::class, 'update'])
-        ->name('reviews.update');
-    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
-        ->name('reviews.destroy');
+    Route::post('/movies/{movie}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 Route::get('/admin-test', function () {

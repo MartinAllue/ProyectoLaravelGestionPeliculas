@@ -6,12 +6,24 @@ use App\Models\Review;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreReviewRequest;
 
 class ReviewController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Show form to edit a review
+     */
+    public function edit(Review $review)
+    {
+        if ($review->user_id !== Auth::id() && !Auth::user()->is_admin) {
+            abort(403);
+        }
+        return view('reviews.edit', compact('review'));
     }
 
     /**
