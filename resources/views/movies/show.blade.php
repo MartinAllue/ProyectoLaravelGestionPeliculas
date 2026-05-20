@@ -16,20 +16,11 @@
                     <h1 class="card-title mb-4">{{ $movie->titulo }}</h1>
 
                     <div class="row mb-3">
-                        <div class="col-sm-6 mb-2">
-                            <strong>Director:</strong> {{ $movie->director ?? 'No disponible' }}
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <strong>Año:</strong> {{ $movie->anio ?? 'No disponible' }}
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <strong>Género:</strong> {{ $movie->genero ?? 'No disponible' }}
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <strong>País:</strong> {{ $movie->pais ?? 'No disponible' }}
-                        </div>
-                        <div class="col-sm-6 mb-2">
-                            <strong>Valoración media:</strong>
+                        <div class="col-sm-6 mb-2"><strong>Director:</strong> {{ $movie->director ?? 'No disponible' }}</div>
+                        <div class="col-sm-6 mb-2"><strong>Año:</strong> {{ $movie->anio ?? 'No disponible' }}</div>
+                        <div class="col-sm-6 mb-2"><strong>Género:</strong> {{ $movie->genero ?? 'No disponible' }}</div>
+                        <div class="col-sm-6 mb-2"><strong>País:</strong> {{ $movie->pais ?? 'No disponible' }}</div>
+                        <div class="col-sm-6 mb-2"><strong>Valoración media:</strong>
                             <span class="badge bg-warning text-dark fs-6">{{ $movie->valoracion_media ?? 'Sin valoraciones' }}</span>
                         </div>
                     </div>
@@ -40,7 +31,7 @@
             </div>
 
             @auth
-                @if(auth()->id() === $movie->user_id || auth()->user()->is_admin ?? false)
+                @if(auth()->user()->isAdmin())
                     <div class="mb-4">
                         <a href="{{ route('movies.edit', $movie->id) }}" class="btn btn-warning">Editar</a>
                         <form action="{{ route('movies.destroy', $movie->id) }}" method="POST" class="d-inline">
@@ -116,9 +107,11 @@
                                     @endif
                                     <p class="mb-2">{{ $review->content }}</p>
                                     @auth
-                                        @if(auth()->id() === $review->user_id || auth()->user()->is_admin ?? false)
+                                        @if(auth()->id() === $review->user_id || auth()->user()->isAdmin())
                                             <div class="d-flex gap-2">
-                                                <a href="{{ route('reviews.edit', $review->id) }}" class="btn btn-sm btn-warning">Editar</a>
+                                                @if(auth()->id() === $review->user_id)
+                                                    <a href="{{ route('reviews.edit', $review->id) }}" class="btn btn-sm btn-warning">Editar</a>
+                                                @endif
                                                 <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este comentario?');">
                                                     @csrf @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>

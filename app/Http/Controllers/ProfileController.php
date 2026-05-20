@@ -13,16 +13,15 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $user = Auth::user(); // usuario logueado
+        $user = Auth::user();
 
-        // Traemos las películas creadas por el usuario
-        $movies = $user->movies()->latest()->paginate(10);
+        $createdMovies = $user->movies()->latest()->paginate(10, ['*'], 'creadas');
+        $ratedMovies = $user->ratings()->with('movie')->latest()->paginate(10, ['*'], 'valoradas');
+        $reviewedMovies = $user->reviews()->with('movie')->latest()->paginate(10, ['*'], 'reseñadas');
 
-        return view('profile.index', compact('user', 'movies'));
+        return view('profile.index', compact('user', 'createdMovies', 'ratedMovies', 'reviewedMovies'));
     }
-    /**
-     * Display the user's profile form.
-     */
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -30,9 +29,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -46,9 +42,6 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [

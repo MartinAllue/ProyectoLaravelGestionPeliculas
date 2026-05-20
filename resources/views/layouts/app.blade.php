@@ -29,6 +29,19 @@
                 </ul>
                 <ul class="navbar-nav">
                     @auth
+                        @if(Auth::user()->isAdmin())
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('admin.dashboard') }}">Panel</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.users') }}">Usuarios</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.reviews') }}">Comentarios</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('movies.create') }}">Nueva Película</a></li>
+                                </ul>
+                            </li>
+                        @endif
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 {{ Auth::user()->name }}

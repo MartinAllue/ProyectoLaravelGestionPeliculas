@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Crear Película')
+@section('title', 'Añadir Película')
 
 @section('content')
     <div class="row justify-content-center">
@@ -60,11 +60,6 @@
                                 <label class="form-label">Sinopsis</label>
                                 <textarea name="sinopsis" rows="4" class="form-control @error('sinopsis') is-invalid @enderror">{{ old('sinopsis') }}</textarea>
                                 @error('sinopsis') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Valoración Media</label>
-                                <input type="number" step="0.1" min="0" max="10" name="valoracion_media" value="{{ old('valoracion_media') }}" class="form-control">
                             </div>
 
                             <div class="col-12">
